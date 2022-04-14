@@ -1,13 +1,15 @@
 <template>
   <div class="home">
     <Header />
+    <div class="game">
+      <img src="@/assets/road.png" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import Header from "@/components/Header.vue"; // @ is an alias to /src
-
 @Component({
   components: {
     Header,
@@ -23,5 +25,6 @@ export default class HomeView extends Vue {}
   margin: 50px auto 0;
   max-width: 600px;
   width: 100%;
+  overflow: hidden;
 }
 </style>
