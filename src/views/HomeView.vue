@@ -27,6 +27,10 @@ import {
   CloudItem,
   GameConfig,
   GameStatus,
+<<<<<<< HEAD
+=======
+  Rect,
+>>>>>>> 75342ea (ADD: rex animation)
   REXItem,
   TreeItem,
 } from "@/types/game-types";
@@ -92,6 +96,11 @@ export default class HomeView extends Vue {
         this.gameStatus === GameStatus.END
       ) {
         this.gameStatus = GameStatus.RUNNING;
+<<<<<<< HEAD
+=======
+        this.initGame();
+        this.startGame();
+>>>>>>> 75342ea (ADD: rex animation)
       } else if (this.gameStatus === GameStatus.RUNNING) {
         if (this.rexItem.rexTranslateY === 0) {
           if (this.rexItem.isInJump === false) {
@@ -104,27 +113,34 @@ export default class HomeView extends Vue {
   }
 
   created() {
+<<<<<<< HEAD
     this.initGame();
     this.startGame();
+=======
+>>>>>>> 75342ea (ADD: rex animation)
     window.addEventListener("keyup", this.submit);
   }
 
   initGame() {
+    this.cloudItems = [];
     for (let i = 0; i < GameConfig.CLOUD_COUNT; i++) {
       this.cloudItems.push({
         cloudTranslateX: GetRandomNum(600, 1200),
         cloudTranslateY: GetRandomNum(0, 60),
       });
     }
+    this.treeItems = [];
     for (let i = 0; i < GameConfig.TREE_COUNT; i++) {
       const isBigTree = GetRandomNum(0, 100) % 2 ? true : false;
       const itemWidth = isBigTree ? 25 : 17;
+      const itemHeight = isBigTree ? 50 : 35;
       const itemCount = GetRandomNum(1, 3);
       const offsetPosition = GetRandomNum(0, 2);
       this.treeItems.push({
         treeTranslateX: GetRandomNum(600, 1200),
         isBigTree: isBigTree,
         width: itemWidth * itemCount,
+        height: itemHeight,
         backgroundPosition: -itemWidth * offsetPosition,
       });
     }
@@ -135,6 +151,7 @@ export default class HomeView extends Vue {
   }
 
   startGamerInterval() {
+    clearInterval(this.timer);
     this.timer = setInterval(() => {
       if (this.gameStatus === GameStatus.RUNNING) {
         this.updateGameStatus();
@@ -159,11 +176,13 @@ export default class HomeView extends Vue {
       if (item.treeTranslateX < 0) {
         const isBigTree = GetRandomNum(0, 100) % 2 ? true : false;
         const itemWidth = isBigTree ? 25 : 17;
+        const itemHeight = isBigTree ? 50 : 35;
         const itemCount = GetRandomNum(1, 3);
         const offsetPosition = GetRandomNum(0, 2);
         item.treeTranslateX = GetRandomNum(600, 1200);
         item.isBigTree = isBigTree;
         item.width = itemWidth * itemCount;
+        item.height = itemHeight;
         item.backgroundPosition = -itemWidth * offsetPosition;
       } else {
         item.treeTranslateX -= GameConfig.TREE_VELOCITY;

@@ -6,6 +6,10 @@ export enum GameConfig {
   TREE_COUNT = 2,
   REX_VELOCITY = 10,
   REX_MAX_JUMP = 100,
+<<<<<<< HEAD
+=======
+  REX_X_POSITION = 50,
+>>>>>>> 75342ea (ADD: rex animation)
 }
 
 export enum GameStatus {
@@ -23,6 +27,7 @@ export interface TreeItem {
   treeTranslateX: number;
   isBigTree: boolean;
   width: number;
+  height: number;
   backgroundPosition: number;
 }
 
