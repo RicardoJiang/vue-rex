@@ -27,10 +27,7 @@ import {
   CloudItem,
   GameConfig,
   GameStatus,
-<<<<<<< HEAD
-=======
   Rect,
->>>>>>> 75342ea (ADD: rex animation)
   REXItem,
   TreeItem,
 } from "@/types/game-types";
@@ -96,11 +93,8 @@ export default class HomeView extends Vue {
         this.gameStatus === GameStatus.END
       ) {
         this.gameStatus = GameStatus.RUNNING;
-<<<<<<< HEAD
-=======
         this.initGame();
         this.startGame();
->>>>>>> 75342ea (ADD: rex animation)
       } else if (this.gameStatus === GameStatus.RUNNING) {
         if (this.rexItem.rexTranslateY === 0) {
           if (this.rexItem.isInJump === false) {
@@ -113,11 +107,6 @@ export default class HomeView extends Vue {
   }
 
   created() {
-<<<<<<< HEAD
-    this.initGame();
-    this.startGame();
-=======
->>>>>>> 75342ea (ADD: rex animation)
     window.addEventListener("keyup", this.submit);
   }
 
@@ -206,6 +195,47 @@ export default class HomeView extends Vue {
         this.rexItem.rexBackgroundPostion -= 44;
       }
     }
+
+    for (let item of this.treeItems) {
+      if (
+        this.isOverlap(
+          { x: 50, y: this.rexItem.rexTranslateY, width: 24, height: 30 },
+          {
+            x: item.treeTranslateX,
+            y: 0,
+            width: item.width / 2,
+            height: item.height / 2,
+          }
+        )
+      ) {
+        this.endGame();
+      }
+    }
+  }
+
+  endGame() {
+    if (this.gameStatus === GameStatus.RUNNING) {
+      this.gameStatus = GameStatus.END;
+    }
+  }
+
+  isOverlap(rect1: Rect, rect2: Rect) {
+    const startX1 = rect1.x;
+    const startY1 = rect1.y;
+    const endX1 = startX1 + rect1.width;
+    const endY1 = startY1 + rect1.height;
+
+    const startX2 = rect2.x;
+    const startY2 = rect2.y;
+    const endX2 = startX2 + rect2.width;
+    const endY2 = startY2 + rect2.height;
+
+    return !(
+      endY2 < startY1 ||
+      endY1 < startY2 ||
+      startX1 > endX2 ||
+      startX2 > endX1
+    );
   }
 }
 </script>
