@@ -4,17 +4,18 @@
     <div class="game">
       <img
         v-for="(item, index) in cloudItems"
-        :key="index"
+        :key="`${index}cloud`"
         src="@/assets/cloud.png"
         class="game-cloud"
         :style="cloudStyle(index)"
       />
       <div
         v-for="(item, index) in treeItems"
-        :key="index"
+        :key="`${index}tree`"
         :style="treeStyle(index)"
         :class="treeClass(index)"
       />
+      <div class="rex" :style="rexStyle" />
       <img src="@/assets/road.png" :style="roadStyle" class="game-road" />
     </div>
   </div>
@@ -22,7 +23,13 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { CloudItem, GameConfig, TreeItem } from "@/types/game-types";
+import {
+  CloudItem,
+  GameConfig,
+  GameStatus,
+  REXItem,
+  TreeItem,
+} from "@/types/game-types";
 import { GetRandomNum } from "@/utils/GameUtils";
 import Header from "@/components/Header.vue";
 @Component({
@@ -34,9 +41,23 @@ export default class HomeView extends Vue {
   roadTranslate = 0;
   cloudItems: Array<CloudItem> = [];
   treeItems: Array<TreeItem> = [];
+  rexItem: REXItem = {
+    rexTranslateY: 0,
+    rexVelocity: 0,
+    rexBackgroundPostion: 0,
+    isInJump: false,
+  };
+  gameStatus = GameStatus.WAIT;
   timer = 0;
   get roadStyle() {
     return { transform: `translateX(${this.roadTranslate}px)` };
+  }
+
+  get rexStyle() {
+    return {
+      transform: `translateY(${this.rexItem.rexTranslateY}px)`,
+      "background-position": `${this.rexItem.rexBackgroundPostion}px 0`,
+    };
   }
 
   cloudStyle(index: number) {
@@ -64,9 +85,28 @@ export default class HomeView extends Vue {
     }
   }
 
+  submit(event: KeyboardEvent) {
+    if (event.code === "Space") {
+      if (
+        this.gameStatus === GameStatus.WAIT ||
+        this.gameStatus === GameStatus.END
+      ) {
+        this.gameStatus = GameStatus.RUNNING;
+      } else if (this.gameStatus === GameStatus.RUNNING) {
+        if (this.rexItem.rexTranslateY === 0) {
+          if (this.rexItem.isInJump === false) {
+            this.rexItem.isInJump = true;
+            this.rexItem.rexVelocity = GameConfig.REX_VELOCITY;
+          }
+        }
+      }
+    }
+  }
+
   created() {
     this.initGame();
     this.startGame();
+    window.addEventListener("keyup", this.submit);
   }
 
   initGame() {
@@ -96,8 +136,10 @@ export default class HomeView extends Vue {
 
   startGamerInterval() {
     this.timer = setInterval(() => {
-      this.updateGameStatus();
-    }, 100);
+      if (this.gameStatus === GameStatus.RUNNING) {
+        this.updateGameStatus();
+      }
+    }, 50);
   }
 
   updateGameStatus() {
@@ -127,6 +169,24 @@ export default class HomeView extends Vue {
         item.treeTranslateX -= GameConfig.TREE_VELOCITY;
       }
     });
+
+    if (this.rexItem.isInJump) {
+      this.rexItem.rexTranslateY -= this.rexItem.rexVelocity;
+
+      if (this.rexItem.rexTranslateY <= -GameConfig.REX_MAX_JUMP) {
+        this.rexItem.rexVelocity = -GameConfig.REX_VELOCITY;
+      } else if (this.rexItem.rexTranslateY >= 0) {
+        this.rexItem.isInJump = false;
+        this.rexItem.rexTranslateY = 0;
+        this.rexItem.rexVelocity = 0;
+      }
+    } else {
+      if (this.rexItem.rexBackgroundPostion <= -220) {
+        this.rexItem.rexBackgroundPostion = 0;
+      } else {
+        this.rexItem.rexBackgroundPostion -= 44;
+      }
+    }
   }
 }
 </script>
@@ -173,5 +233,15 @@ export default class HomeView extends Vue {
   background-repeat: no-repeat;
   height: 50px;
   background-image: url("@/assets/tree-big.png");
+}
+
+.rex {
+  position: absolute;
+  bottom: 0;
+  left: 50px;
+  background-repeat: no-repeat;
+  width: 44px;
+  height: 47px;
+  background-image: url("@/assets/rex.png");
 }
 </style>

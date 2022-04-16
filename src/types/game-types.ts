@@ -4,6 +4,14 @@ export enum GameConfig {
   TREE_VELOCITY = 10,
   CLOUD_COUNT = 2,
   TREE_COUNT = 2,
+  REX_VELOCITY = 10,
+  REX_MAX_JUMP = 100,
+}
+
+export enum GameStatus {
+  WAIT,
+  RUNNING,
+  END,
 }
 
 export interface CloudItem {
@@ -16,4 +24,11 @@ export interface TreeItem {
   isBigTree: boolean;
   width: number;
   backgroundPosition: number;
+}
+
+export interface REXItem {
+  rexTranslateY: number;
+  rexVelocity: number;
+  rexBackgroundPostion: number;
+  isInJump: boolean;
 }
