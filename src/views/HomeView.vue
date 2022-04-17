@@ -2,6 +2,11 @@
   <div class="home">
     <Header />
     <div class="game">
+      <div class="score">Score: {{ score }}</div>
+      <div v-if="isEnd" class="end">
+        <div class="over-text">GAME OVER</div>
+        <img src="@/assets/retry.png" class="over-image" />
+      </div>
       <img
         v-for="(item, index) in cloudItems"
         :key="`${index}cloud`"
@@ -50,6 +55,11 @@ export default class HomeView extends Vue {
   };
   gameStatus = GameStatus.WAIT;
   timer = 0;
+  score = 0;
+
+  get isEnd() {
+    return this.gameStatus === GameStatus.END;
+  }
   get roadStyle() {
     return { transform: `translateX(${this.roadTranslate}px)` };
   }
@@ -111,6 +121,7 @@ export default class HomeView extends Vue {
   }
 
   initGame() {
+    this.score = 0;
     this.cloudItems = [];
     for (let i = 0; i < GameConfig.CLOUD_COUNT; i++) {
       this.cloudItems.push({
@@ -145,10 +156,11 @@ export default class HomeView extends Vue {
       if (this.gameStatus === GameStatus.RUNNING) {
         this.updateGameStatus();
       }
-    }, 50);
+    }, 100);
   }
 
   updateGameStatus() {
+    this.score += 1;
     if (this.roadTranslate <= -600) {
       this.roadTranslate = 0;
     }
@@ -252,6 +264,27 @@ export default class HomeView extends Vue {
 .game {
   position: relative;
   height: 150px;
+}
+
+.score {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 14px;
+  font-family: Helvetica;
+}
+.end {
+  margin: 0 auto;
+}
+
+.over-text {
+  font-size: 20px;
+  font-weight: bold;
+  font-family: Helvetica;
+}
+
+.over-image {
+  margin-top: 20px;
 }
 
 .game-cloud {
