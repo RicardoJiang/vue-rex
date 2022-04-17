@@ -43,7 +43,7 @@ import Header from "@/components/Header.vue";
     Header,
   },
 })
-export default class HomeView extends Vue {
+export default class GameView extends Vue {
   roadTranslate = 0;
   cloudItems: Array<CloudItem> = [];
   treeItems: Array<TreeItem> = [];
