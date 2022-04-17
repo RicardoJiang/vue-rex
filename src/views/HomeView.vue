@@ -270,6 +270,7 @@ export default class HomeView extends Vue {
   position: absolute;
   right: 0;
   top: 0;
+  font-weight: bold;
   font-size: 14px;
   font-family: Helvetica;
 }
